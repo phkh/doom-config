@@ -17,9 +17,6 @@
 (setq org-modern-table-vertical 1)
 (setq org-modern-table t)
 
-
-
-
 (after! org
   ;; 1) TODO workflow (matches your screenshot vibe)
   (setq org-todo-keywords
@@ -105,7 +102,7 @@
 
 
 (setq fancy-splash-image
-      (expand-file-name "hydra.png" doom-user-dir))
+      (expand-file-name "misc/hydra.png" doom-user-dir))
 
 (after! org-modern
   (setq org-modern-star 'replace
@@ -120,3 +117,26 @@
           (lambda ()
             (whitespace-mode 0)))
 
+
+(map! :leader
+      :desc "Open Dashboard"
+      "b D" #'+doom-dashboard/open)
+
+
+(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-loaded)
+
+
+;; 1. Define your own footer WITHOUT the icon
+(defun my-custom-dashboard-footer ()
+  (insert
+   "\n"
+   (+doom-dashboard--center
+    +doom-dashboard--width
+    "fear eats the soul")
+   "\n"))
+
+;; 2. This line removes the default footer (which contains the GitHub icon)
+(remove-hook '+doom-dashboard-functions #'+doom-dashboard-widget-footer)
+
+;; 3. This adds your icon-free version to the bottom
+(add-hook! '+doom-dashboard-functions :append #'my-custom-dashboard-footer)
