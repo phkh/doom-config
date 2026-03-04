@@ -8,6 +8,10 @@
 ;;   3. Restart Emacs.
 ;;
 ;; Use 'C-h f package\!' to look up documentation for the `package!' macro.
+;;
+
+(package! toc-org)
+(package! lsp-ui)
 
 
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
