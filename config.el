@@ -3,9 +3,19 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
-
-(setq doom-theme 'doom-ayu-dark)
+(setq doom-theme 'doom-ir-black)
 (setq doom-font (font-spec :family "JetBrains Mono" :size 15))
+(setq +doom-dashboard-functions
+      '(doom-dashboard-widget-banner
+        doom-dashboard-widget-footer))
+(setq doom-dashboard-footer-icon nil)
+(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-footer)
+
+(after! doom-themes
+  ;; Keep your normal doom-font as-is, but force Japanese to a mono CJK font:
+  (set-fontset-font t 'japanese-jisx0208 (font-spec :family "Sarasa Mono J"))
+  (set-fontset-font t 'kana            (font-spec :family "Sarasa Mono J"))
+  (set-fontset-font t 'han             (font-spec :family "Sarasa Gothic SC")))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -125,20 +135,19 @@
 
 (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-loaded)
 
+;; (defadvice! fixed+doom-dashboard--center (len s)
+;;   :override #'+doom-dashboard--center
+;;   (concat (make-string (ceiling (max 0 (- len (string-width s))) 2) ? )
+;;           s))
 
-;; 1. Define your own footer WITHOUT the icon
 (defun my-custom-dashboard-footer ()
   (insert
    "\n"
    (+doom-dashboard--center
     +doom-dashboard--width
-    "fear eats the soul")
+    "face the strange")
    "\n"))
 
-;; 2. This line removes the default footer (which contains the GitHub icon)
-(remove-hook '+doom-dashboard-functions #'+doom-dashboard-widget-footer)
-
-;; 3. This adds your icon-free version to the bottom
 (add-hook! '+doom-dashboard-functions :append #'my-custom-dashboard-footer)
 
 (setq org-link-descriptive t)
@@ -183,3 +192,35 @@
 
 (after! lsp-ui
   (setq lsp-ui-sideline-enable nil))
+
+(after! treesit
+  (setq treesit-language-source-alist
+        '((typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+          (tsx        "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))))
+
+;; Always use tsx-ts-mode for .tsx files
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
+(add-hook 'tsx-ts-mode-hook #'lsp)
+
+(after! emmet-mode
+  ;; Emmet expansion in TSX buffers
+  (add-hook 'tsx-ts-mode-hook #'emmet-mode)
+  ;; Treat TSX like JSX for Emmet parsing
+  (add-to-list 'emmet-jsx-major-modes 'tsx-ts-mode))
+
+(defun phil/tsx-autoclose-setup ()
+  "Auto-close tags in tsx-ts-mode buffers."
+  ;; Electric-pair will insert the closing part of pairs.
+  (electric-pair-local-mode 1)
+
+  ;; Make '>' trigger pairing with '</>'-style behavior for tags.
+  ;; This is a lightweight trick; Emmet is the “real” tag generator.
+  (setq-local electric-pair-pairs (append electric-pair-pairs '((?> . ?>))))
+  (setq-local electric-pair-text-pairs electric-pair-pairs)
+
+  ;; Optional: convenience key to expand Emmet easily
+  ;; Type: div>span then C-j => <div><span></span></div>
+  (local-set-key (kbd "C-j") #'emmet-expand-line))
+
+(add-hook 'tsx-ts-mode-hook #'phil/tsx-autoclose-setup)
+(add-hook 'tsx-ts-mode-hook #'emmet-mode)

@@ -12,6 +12,7 @@
 
 (package! toc-org)
 (package! lsp-ui)
+(package! emmet-mode)
 
 
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
