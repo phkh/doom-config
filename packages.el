@@ -14,6 +14,9 @@
 (package! lsp-ui)
 (package! emmet-mode)
 
+(package! eca :recipe (:host github :repo "editor-code-assistant/eca-emacs" :files ("*.el")))
+
+
 
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;; (package! some-package)

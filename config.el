@@ -224,3 +224,8 @@
 
 (add-hook 'tsx-ts-mode-hook #'phil/tsx-autoclose-setup)
 (add-hook 'tsx-ts-mode-hook #'emmet-mode)
+
+(global-auto-revert-mode 1)
+
+(after! vterm
+  (define-key vterm-mode-map (kbd "<escape>") nil))
