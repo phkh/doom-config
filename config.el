@@ -108,7 +108,8 @@
 (after! org
   (setq org-tag-alist
         '(("personal" . ?p)
-          ("work" . ?w))))
+          ("work"  . ?w)
+          ("leisr" . ?l))))
 
 
 (setq fancy-splash-image
@@ -211,7 +212,6 @@
 (defun phil/tsx-autoclose-setup ()
   "Auto-close tags in tsx-ts-mode buffers."
   ;; Electric-pair will insert the closing part of pairs.
-  (electric-pair-local-mode 1)
 
   ;; Make '>' trigger pairing with '</>'-style behavior for tags.
   ;; This is a lightweight trick; Emmet is the “real” tag generator.
